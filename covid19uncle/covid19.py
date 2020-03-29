@@ -1,12 +1,16 @@
-from urllib.request import urlopen as req
+#from urllib.request import urlopen as req #เนื่องจากว่า urllib ในบางเว็บไม่รองรับ โดยจะขึ้นเป็น Error 403 แทน
+import certifi 
+import urllib3
 from bs4 import BeautifulSoup as soup
 
 def GlobalCovid19():
 
+	http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',ca_certs=certifi.where())
+
 	url = 'https://www.worldometers.info/coronavirus/'
 
-	webopen = req(url)
-	page_html = webopen.read()
+	webopen = http.request('GET', url)
+	page_html = webopen.data
 	webopen.close()
 
 	data = soup(page_html,'html.parser')
@@ -61,10 +65,12 @@ def GlobalCovid19():
 
 
 def ThaiCovid19():
+	http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',ca_certs=certifi.where())
+
 	url = 'https://ddc.moph.go.th/viralpneumonia/'
 
-	webopen = req(url)
-	page_html = webopen.read()
+	webopen = http.request('GET', url)
+	page_html = webopen.data
 	webopen.close()
 
 	data = soup(page_html,'html.parser')
